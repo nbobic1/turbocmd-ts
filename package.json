@@ -9,9 +9,30 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onView:proba"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
+    "viewsContainers": {
+      "panel": [
+        {
+          "id": "proba",
+          "title": "moa ekstenzija",
+          "icon": "resources/package-explorer.svg"
+        }
+      ]
+    },
+    "views": {
+      "proba": [
+        {
+          "type": "webview",
+          "id": "vstodo-sidebar",
+          "name": "VSTodo",
+          "contextualTitle": "VSTodo"
+        }
+      ]
+    },
     "commands": [
       {
         "command": "turbocmd.helloWorld",
