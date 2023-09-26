@@ -1,4 +1,5 @@
 import * as vscode from "vscode"
+import { exec } from 'child_process';
 
 export class SidebarProvider implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
@@ -19,12 +20,22 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
+      console.log('dataaaa',data)
       switch (data.type) {
         case "logout": {
           break;
         }
-        case "authenticate": {
+        case "buttonClick": {
           
+          vscode.window.showInformationMessage('Lts GOOOOOOO');
+          exec('npm i express', (error, stdout, stderr) => {
+            if (error) {
+                console.error(`Error: ${error}`);
+                return;
+            }
+            console.log(`Output: ${stderr}`)
+            console.log(`Output: ${stdout}`);
+        });
           break;
         }
        
@@ -79,12 +90,39 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 				<link href="${styleVSCodeUri}" rel="stylesheet">
         <link href="${styleMainUri}" rel="stylesheet">
         <script >
-          const tsvscode = acquireVsCodeApi();
-          const apiBaseUrl = }
         </script>
 			</head>
       <body>
       <h1>hadsfdag</h1>
+      <h2>Changing an Text of an element in the HTML document using JavaScript.</h2>
+   <p id = "upper">The text of the below element will be replaced by the text you enter in input bar once you click the button.</p>
+   <input type = "text" id = "inp"> <br> <br>
+   <button id = "btn" onclick = "changeImage()"> Click to change the Text </button>
+   <p id = "para1">This is the initial text of Para1.</p>
+   <p id = "para2">This is the initial text of Para2.</p>
+    
+    
+  
+   <input
+   onfocus="this.style.border='1px solid #007bff';"
+   onblur="this.style.border='0px solid #007bff';"
+   class="suggest-input-container" 
+   style="outline: none; background-color: var(--vscode-input-background);
+    color: var(--vscode-input-foreground); 
+    border-width: 0px; border-style: solid; border-radius:2px;   padding:3px;   value=" Search Extensions in Marketplace"></input>
+
+   <script>
+   const vscode = acquireVsCodeApi();
+      var para1 = document.getElementById("para1");
+      var para2 = document.getElementById("para2");
+      function changeImage() {
+        vscode.postMessage({ type: 'buttonClick' });
+         var inp = document.getElementById("inp");
+         var enteredText = inp.value;
+         para1.innerText = enteredText + ", This text is changed using the innerText property. ";
+         para2.innerHTML = " <u> " + enteredText + " </u> " + ", <b> This text is changed using the <em> innerHTML </em> property. <b> <br> ";
+      }
+   </script>
 				<script src="${scriptUri}"></script>
 			</body>
 			</html>`;

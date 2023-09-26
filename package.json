@@ -30,6 +30,12 @@
           "id": "vstodo-sidebar",
           "name": "VSTodo",
           "contextualTitle": "VSTodo"
+        },
+        {
+          "type": "webview",
+          "id": "term",
+          "name": "VSTerm",
+          "contextualTitle": "Term"
         }
       ]
     },
