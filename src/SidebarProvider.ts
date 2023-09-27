@@ -26,13 +26,21 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           break;
         }
         case "buttonClick": {
-          
-          vscode.window.showInformationMessage('Lts GOOOOOOO');
-          exec('npm i express', (error, stdout, stderr) => {
+          var tem=vscode?.workspace?.workspaceFolders?.at(0)?.uri.path.replace('/c:','C:')
+          console.log('tem',tem)
+          /*
+          this part of code executes comand in terminal
+          var term=vscode.window.activeTerminal
+          term?.sendText(data.text+'\n')
+          term?.show()
+          */
+          exec(data.text,{cwd:tem}, (error, stdout, stderr) => {
             if (error) {
                 console.error(`Error: ${error}`);
-                return;
+return
             }
+            webviewView.webview.postMessage({ type: 'rezult', text:stdout.replace(new RegExp('\n', 'g'),'<br/>')
+           })
             console.log(`Output: ${stderr}`)
             console.log(`Output: ${stdout}`);
         });
@@ -96,11 +104,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       <h1>hadsfdag</h1>
       <h2>Changing an Text of an element in the HTML document using JavaScript.</h2>
    <p id = "upper">The text of the below element will be replaced by the text you enter in input bar once you click the button.</p>
-   <input type = "text" id = "inp"> <br> <br>
+   <input type = "text" id = "input"/> <br> <br>
    <button id = "btn" onclick = "changeImage()"> Click to change the Text </button>
-   <p id = "para1">This is the initial text of Para1.</p>
+   <div id = "para1"></div>
    <p id = "para2">This is the initial text of Para2.</p>
-    
     
   
    <input
@@ -113,10 +120,23 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
    <script>
    const vscode = acquireVsCodeApi();
-      var para1 = document.getElementById("para1");
+   var para1 = document.getElementById("para1");
+      window.addEventListener('message', event => {
+    console.log('event===',event);
+    const message = event.data; // The JSON data our extension sent
+        para1.innerHTML=message.text
+    switch (message.command) {
+        case 'refactor':
+            count = Math.ceil(count * 0.5);
+            counter.textContent = count;
+            break;
+    }
+});
       var para2 = document.getElementById("para2");
+   var input=document.getElementById("input") 
       function changeImage() {
-        vscode.postMessage({ type: 'buttonClick' });
+        console.log('ww',) 
+        vscode.postMessage({ type: 'buttonClick', text:input.value });
          var inp = document.getElementById("inp");
          var enteredText = inp.value;
          para1.innerText = enteredText + ", This text is changed using the innerText property. ";
