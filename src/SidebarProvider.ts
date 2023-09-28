@@ -74,7 +74,7 @@ return
     );
 
     const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, "out", "compiled/sidebar.js")
+      vscode.Uri.joinPath(this._extensionUri, "out", "compiled/App.js")
     );
     const styleMainUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, "out", "compiled/sidebar.css")
@@ -135,7 +135,7 @@ return
       var para2 = document.getElementById("para2");
    var input=document.getElementById("input") 
       function changeImage() {
-        console.log('ww',) 
+        console.log('ww',vscode.getState()) 
         vscode.postMessage({ type: 'buttonClick', text:input.value });
          var inp = document.getElementById("inp");
          var enteredText = inp.value;

@@ -14,6 +14,7 @@ export function activate(context: vscode.ExtensionContext) {
 	  const provide=new SidebarProvider(context.extensionUri);  
 	  context.subscriptions.push(vscode.window.registerWebviewViewProvider('vstodo-sidebar',provide))	
 	  let disposable = vscode.commands.registerCommand('turbocmd.helloWorld', () => {
+		
 	});
 	context.subscriptions.push(disposable); 
 }
