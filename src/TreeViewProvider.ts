@@ -1,9 +1,45 @@
 import * as vscode from "vscode"
 import { exec } from 'child_process';
+const fs =require('fs')
+const  path = require("path");
 
+function getFolderTree(rootFolderUri:any) {
+    console.log('root folder',rootFolderUri)
+    const folderTree = {
+      name: path.basename(rootFolderUri), // Root folder name
+      path: rootFolderUri, // Root folder path
+      type: 'folder', // You can include additional information about the folder
+      children: [], // Subfolders and files will be stored here
+    };
+  
+    function traverseFolder(currentPath:any, currentFolder:any) {
+      const items = fs.readdirSync(currentPath);
+  
+      for (const item of items) {
+        const itemPath = path.join(currentPath, item);
+        const stats = fs.statSync(itemPath);
+  
+        if (stats.isDirectory()) {
+          const folder = {
+            name: item,
+            path: itemPath,
+            type: 'folder',
+            children: [],
+          };
+          currentFolder.children.push(folder);
+          traverseFolder(itemPath, folder);
+        } 
+        // You can handle other types (e.g., symbolic links) as needed.
+      }
+    }
+  
+    traverseFolder(rootFolderUri, folderTree);
+    return folderTree;
+  }
 export class TreeViewProvider implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
   _doc?: vscode.TextDocument;
+  buttonsWebView:any;
   constructor(private readonly _extensionUri: vscode.Uri) {}
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
@@ -19,30 +55,21 @@ export class TreeViewProvider implements vscode.WebviewViewProvider {
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
-      console.log('dataaaa',data)
-      webviewView.webview.postMessage({ type: 'rezult', text: vscode?.workspace?.workspaceFolders})
-      switch (data.type) {
-        case "logout": {
-          break;
-        }
-        
-       
-        case "onInfo": {
-         
-          vscode.window.showInformationMessage(data.value);
-          break;
-        }
-        case "onError": {
-        
-          vscode.window.showErrorMessage(data.value);
-          break;
-        }
-      }
+        var folderTree=getFolderTree(vscode?.workspace?.workspaceFolders?.at(0)?.uri.path.replace('/c:','C:'))
+      webviewView.webview.postMessage({ type: 'rezult', text: folderTree})
+
+        this.buttonsWebView.sendM({path:data.path??vscode?.workspace?.workspaceFolders?.at(0)?.uri.path.replace('/c:','C:')})
+
     });
   }
 
   public revive(panel: vscode.WebviewView) {
     this._view = panel;
+  }
+  public setV(webview:any)
+  {
+    this.buttonsWebView=webview
+  
   }
   public sendM(text:any){
     this._view?.webview.postMessage({ type: 'terminalOutput', text:text.replace(/\n/g, "<br>")})

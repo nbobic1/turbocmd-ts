@@ -17,6 +17,7 @@ export function activate(context: vscode.ExtensionContext) {
 	const provide1=new TerminalProvider(context.extensionUri);
 	const provide2=new TreeViewProvider(context.extensionUri);
 	 provide.setV(provide1)  
+	 provide2.setV(provide)
 	  context.subscriptions.push(vscode.window.registerWebviewViewProvider('buttons-turbocmd',provide))	
 	  context.subscriptions.push(vscode.window.registerWebviewViewProvider('term-turbocmd',provide1))	
 	  context.subscriptions.push(vscode.window.registerWebviewViewProvider('treeview-turbocmd',provide2))	

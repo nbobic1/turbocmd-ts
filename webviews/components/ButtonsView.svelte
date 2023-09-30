@@ -3,7 +3,8 @@
 import vscode from "./vscodeVar";
 	let comand = '';
     let btnName='';
-    var params=''
+    let params=''
+    let path='C:'
     let executeingCommand
     let buttons=vscode.getState()?.buttons??[] 
       function handleClick () {
@@ -12,7 +13,7 @@ import vscode from "./vscodeVar";
         vscode.setState({...vscode.getState(),buttons:buttons})
           }
        function sendCommand(event) {
-        vscode.postMessage({ type: 'buttonClick', text:event.detail.arg+' '+params});
+        vscode.postMessage({ type: 'buttonClick', text:event.detail.arg+' '+params,path:path});
       }
       function removeButton(event){
        buttons = buttons.filter((item, i) => i !== event.detail.arg); 
@@ -20,7 +21,11 @@ import vscode from "./vscodeVar";
         vscode.setState({...vscode.getState(),buttons:buttons})
      
       }
-      
+      window.addEventListener('message', event => {
+                console.log('event u buttons',event);
+                const message = event.data.path; 
+                path=message
+            });
    </script>
 <div style=" width:100%; height:100%; padding:10px; background: linear-gradient(0deg, #626321 , rgba(39, 38, 22, 0.00) ;" >
 Additional command text:

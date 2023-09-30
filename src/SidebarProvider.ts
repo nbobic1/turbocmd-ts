@@ -34,7 +34,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           term?.sendText(data.text+'\n')
           term?.show()
           */
-          exec(data.text,{cwd:tem}, (error, stdout, stderr) => {
+          exec(data.text,{cwd:data.path}, (error, stdout, stderr) => {
             if (error) {
                   console.error(`Error: ${error}`);
                   return
@@ -74,7 +74,9 @@ public setV(webview:any)
   this.terminalWebView=webview
 
 }
-
+public sendM(m:any){
+  this._view?.webview.postMessage(m)
+}
   private _getHtmlForWebview(webview: vscode.Webview) {
     const styleResetUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, "media", "reset.css")
