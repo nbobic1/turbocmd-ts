@@ -4,6 +4,7 @@
   "displayName": "TurboCMD",
   "description": "CMD on steroids",
   "version": "0.1.0",
+  "icon":"./icon.png",
   "engines": {
     "vscode": "^1.82.0"
   },
@@ -19,7 +20,7 @@
       "panel": [
         {
           "id": "proba",
-          "title": "moa ekstenzija",
+          "title": "TurboCMD",
           "icon": "resources/package-explorer.svg"
         }
       ]
