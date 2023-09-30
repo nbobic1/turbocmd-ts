@@ -1,10 +1,9 @@
 import * as vscode from "vscode"
 import { exec } from 'child_process';
 
-export class SidebarProvider implements vscode.WebviewViewProvider {
+export class TerminalProvider implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
   _doc?: vscode.TextDocument;
-   terminalWebView:any=null
   constructor(private readonly _extensionUri: vscode.Uri) {}
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
@@ -25,32 +24,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         case "logout": {
           break;
         }
-        case "buttonClick": {
-          var tem=vscode?.workspace?.workspaceFolders?.at(0)?.uri.path.replace('/c:','C:')
-          console.log('tem',tem)
-          /*
-          this part of code executes comand in terminal
-          var term=vscode.window.activeTerminal
-          term?.sendText(data.text+'\n')
-          term?.show()
-          */
-          exec(data.text,{cwd:tem}, (error, stdout, stderr) => {
-            if (error) {
-                  console.error(`Error: ${error}`);
-                  return
-            }
-            webviewView.webview.postMessage({ type: 'rezult', text:stdout})
-            webviewView.webview.postMessage({ type: 'terminalOutput', text:stdout   })
-            if(this.terminalWebView!==null)
-            {
-              console.log('postavljam')
-              this.terminalWebView.sendM(stdout+stderr)
-            }
-            console.log(`Output: ${stderr}`)
-            console.log(`Output: ${stdout}`);
-        });
-          break;
-        }
+        
        
         case "onInfo": {
          
@@ -69,12 +43,9 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
   public revive(panel: vscode.WebviewView) {
     this._view = panel;
   }
-public setV(webview:any)
-{
-  this.terminalWebView=webview
-
-}
-
+  public sendM(text:any){
+    this._view?.webview.postMessage({ type: 'terminalOutput', text:text.replace(/\n/g, "<br>")})
+  }
   private _getHtmlForWebview(webview: vscode.Webview) {
     const styleResetUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, "media", "reset.css")
@@ -83,15 +54,13 @@ public setV(webview:any)
       vscode.Uri.joinPath(this._extensionUri, "media", "vscode.css")
     );
 
-    const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, "out", "compiled/App.js")
-    );
+   
 
 
     // Use a nonce to only allow a specific script to be run.
    
     return `<!DOCTYPE html>
-			<html lang="en" style="width:100%; height:100%">
+			<html lang="en">
 			<head>
 				<meta charset="UTF-8">
 				<!--
@@ -107,9 +76,17 @@ public setV(webview:any)
         <script >
         </script>
 			</head>
-      <body style="width:100%; height:100%; padding:0">
-      
-				<script src="${scriptUri}"></script>
+      <body>
+      <div id="para1"></div>
+				<script >
+                var para1 = document.getElementById("para1");
+   window.addEventListener('message', event => {
+ console.log('event===term1',event);
+ const message = event.data; // The JSON data our extension sent
+
+ para1.innerHTML+=message.text
+});
+</script>
 			</body>
 			</html>`;
   }

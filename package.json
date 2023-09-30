@@ -27,15 +27,21 @@
       "proba": [
         {
           "type": "webview",
-          "id": "vstodo-sidebar",
-          "name": "VSTodo",
-          "contextualTitle": "VSTodo"
+          "id": "treeview-turbocmd",
+          "name": "Tree view",
+          "contextualTitle": "Tree view"
         },
         {
           "type": "webview",
-          "id": "term",
-          "name": "VSTerm",
-          "contextualTitle": "Term"
+          "id": "buttons-turbocmd",
+          "name": "Buttons",
+          "contextualTitle": "Button"
+        },
+        {
+          "type": "webview",
+          "id": "term-turbocmd",
+          "name": "Terminal",
+          "contextualTitle": "yerm"
         }
       ]
     },
