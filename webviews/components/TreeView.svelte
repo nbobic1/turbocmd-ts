@@ -2,6 +2,7 @@
     import Folder from "./Folder.svelte";
 import vscode from "./vscodeVar";
 let treeview=undefined
+let path=''
     //send message so i get folder structure of opened project
     vscode.postMessage({})
    window.addEventListener('message', event => {
@@ -13,8 +14,9 @@ treeview=message
 
 function folderChange(event){
     vscode.postMessage({path:event.detail.path})
+    path=event.detail.path
 }
 </script>
 {#if treeview}
-<Folder on:folderChange={folderChange} folders={treeview} name={treeview.name}></Folder> 
+<Folder on:folderChange={folderChange} selectedPath={path} folders={treeview} name={treeview.name}></Folder> 
 {/if}
