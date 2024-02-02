@@ -1,7 +1,10 @@
 # turbocmd README
-VS Code extension
+VS Code extension 
+
 We don't just care about user experience, we care about developer experience too
+
 From developers, for developers
+
 https://marketplace.visualstudio.com/items?itemName=ReincarnatedShrike.turbocmd
 
 ## Features
